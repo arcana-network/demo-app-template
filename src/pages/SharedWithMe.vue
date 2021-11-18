@@ -32,8 +32,10 @@ export default {
     let files = computed(() => {
       return store.getters.sharedWithMe;
     });
+
     onMounted(async () => {
       document.title = "Shared With Me | Arcana Demo";
+      store.dispatch("showLoader", "Fetching shared files...");
       // Need to call shared with me api here to update it once mounted
       let sharedFiles = [];
       // Update the store with new shared with me files list
@@ -45,6 +47,7 @@ export default {
           return d;
         })
       );
+      store.dispatch("hideLoader");
     });
 
     return {

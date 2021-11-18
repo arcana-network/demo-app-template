@@ -225,16 +225,66 @@
     <div class="text-center mt-5 mb-3">
       <button
         class="focus:outline-none py-2 px-5 rounded-full font-bold shadow-2xl"
-        :class="!shareEmailInvalid ? 'cursor-pointer' : 'cursor-not-allowed'"
+        :class="!isShareEmailInvalid ? 'cursor-pointer' : 'cursor-not-allowed'"
         :style="{
-          background: !shareEmailInvalid ? '#058aff' : '#a1cdf8',
+          background: !isShareEmailInvalid ? '#058aff' : '#a1cdf8',
           color: 'white',
         }"
-        :disabled="shareEmailInvalid"
+        :disabled="isShareEmailInvalid"
         @click.stop="shareFile"
       >
         Share
       </button>
+    </div>
+  </dialog-box>
+
+  <dialog-box v-if="revokeDialog" @close="closeDialog">
+    <h3 class="font-ubuntu font-bold" style="color: #253d52; font-size: 1.5em">
+      List of user addresses
+    </h3>
+    <ul
+      v-if="sharedUsers.users?.length"
+      class="my-3 overflow-y-auto overflow-hidden"
+      style="max-height: 60vh"
+    >
+      <li
+        v-for="user in sharedUsers.users"
+        :key="user"
+        class="py-3"
+        style="border-bottom: 2px solid #a1cdf8"
+      >
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <span
+              class="
+                inline-block
+                overflow-hidden overflow-ellipsis
+                align-middle
+                font-black
+                text-base
+              "
+              style="width: calc(100% - 2em); color: #707070"
+            >
+              {{ user }}
+            </span>
+          </template>
+          {{ user }}
+        </n-tooltip>
+        <n-tooltip trigger="hover">
+          <template #trigger>
+            <BackspaceIcon
+              class="inline-block h-6 w-6 cursor-pointer ml-1 outline-none"
+              @click.stop="revokeAccess(sharedUsers.file, user)"
+            />
+          </template>
+          Revoke Access
+        </n-tooltip>
+      </li>
+    </ul>
+    <div v-else class="my-3">
+      <span class="font-black text-xl" style="color: #707070">
+        Not shared with anyone
+      </span>
     </div>
   </dialog-box>
 </template>
@@ -320,8 +370,13 @@ export default {
     let menuPosition = ref({});
     let showMenu = ref(false);
     let shareDialog = ref(false);
+    let revokeDialog = ref(false);
     let shareEmail = ref("");
-    let shareEmailInvalid = ref(false);
+    let sharedUsers = ref({
+      file: {},
+      users: [],
+    });
+    let isShareEmailInvalid = ref(true);
     const toast = inject("$toast");
     const fileMixin = useFileMixin(toast);
     let selectedFile;
@@ -330,12 +385,7 @@ export default {
     menuItem.verify = {
       label: "Verify",
       icon: PencilAltIcon,
-      command: () => {
-        window.open(
-          "https://explorer.arcana.network/did/" + selectedFile.did,
-          "__blank"
-        );
-      },
+      command: () => {},
     };
 
     menuItem.download = {
@@ -366,7 +416,8 @@ export default {
       label: "Revoke",
       icon: PencilAltIcon,
       command: () => {
-        console.log("Revoke");
+        revokeDialog.value = true;
+        getSharedUsers(selectedFile);
       },
     };
 
@@ -384,7 +435,12 @@ export default {
 
     let menuItemsArr = [];
     if (props.pageTitle === "My Files") {
-      menuItemsArr = [menuItem.download, menuItem.share, menuItem.remove];
+      menuItemsArr = [
+        menuItem.download,
+        menuItem.share,
+        menuItem.revoke,
+        menuItem.remove,
+      ];
     } else if (props.pageTitle === "Shared With Me") {
       menuItemsArr = [menuItem.download];
     } else {
@@ -437,13 +493,36 @@ export default {
 
     function closeDialog() {
       shareEmail.value = "";
-      shareEmailInvalid.value = false;
+      isShareEmailInvalid.value = false;
       shareDialog.value = false;
+      revokeDialog.value = false;
+      sharedUsers.value = {
+        file: {},
+        users: [],
+      };
     }
 
     function shareFile() {
-      fileMixin.share(selectedFile, shareEmail.value);
+      const emails = shareEmail.value.split(",").map((email) => email.trim());
+      for (let email of emails) {
+        await fileMixin.share(fileToShare, email);
+      }
       closeDialog();
+    }
+
+    async function revokeAccess(fileToRevoke, address) {
+      await fileMixin.revoke(fileToRevoke, address);
+      getSharedUsers(fileToRevoke);
+    }
+
+    function getSharedUsers(file) {
+      fileMixin.getSharedUsers(file.fileId).then((res) => {
+        const users = res?.filter((user) => user !== GENESIS_ADDRESS);
+        sharedUsers.value = {
+          file,
+          users: users || [],
+        };
+      });
     }
 
     onMounted(() => {
@@ -453,11 +532,10 @@ export default {
     watch(
       () => shareEmail.value,
       () => {
-        if (isValidEmail(shareEmail.value)) {
-          shareEmailInvalid.value = false;
-        } else {
-          shareEmailInvalid.value = true;
-        }
+        const emails = shareEmail.value.split(",").map((email) => email.trim());
+        isShareEmailInvalid.value = emails.some(
+          (email) => !isValidEmail(email)
+        );
       }
     );
 
@@ -469,13 +547,16 @@ export default {
       menuItems,
       shareDialog,
       shareEmail,
-      shareEmailInvalid,
+      isShareEmailInvalid,
       fileMenu,
       closeDropdown,
       getReadableDate,
       getReadableSize,
       shareFile,
       closeDialog,
+      revokeDialog,
+      sharedUsers,
+      revokeAccess,
     };
   },
 };

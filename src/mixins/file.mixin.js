@@ -143,6 +143,7 @@ export function useFileMixin(toast) {
       toast("Something went wrong. Try again", errorToast);
       store.dispatch("hideLoader");
     }
+    return;
   }
 
   /**
@@ -252,11 +253,52 @@ export function useFileMixin(toast) {
     }
   }
 
+  /**
+   *
+   * @param {String} did
+   * @returns {String[]}
+   */
+  async function getSharedUsers(did) {
+    try {
+      // const fileId = did.substring(0, 2) !== "0x" ? "0x" + did : did;
+      // return sharedUsers;
+    } catch (e) {
+      console.error(e);
+      toast(
+        "Something went wrong while fetching shared users list",
+        errorToast
+      );
+      return [];
+    }
+  }
+
+  /**
+   *
+   * @param {File} fileToRevoke
+   * @param {String} address
+   * @returns {void}
+   */
+  async function revoke(fileToRevoke, address) {
+    const did = fileToRevoke.fileId;
+    store.dispatch("showLoader", "Revoking file access...");
+
+    try {
+      // const fileId = did.substring(0, 2) !== "0x" ? "0x" + did : did;
+      // toast(`File Access Revoked`, successToast);
+    } catch (e) {
+      console.error(e);
+      toast("Something went wrong. Try again", errorToast);
+    }
+    store.dispatch("hideLoader");
+  }
+
   return {
     download,
     remove,
     upload,
     share,
     updateLimits,
+    getSharedUsers,
+    revoke,
   };
 }

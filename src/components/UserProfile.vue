@@ -84,10 +84,7 @@
                 w-24
               "
               style="color: #058aff; vertical-align: middle"
-              :href="
-                'https://explorer.arcana.network/address/' +
-                profile.walletAddress
-              "
+              href="#"
               target="__blank"
             >
               {{ profile.walletAddress }}
@@ -187,7 +184,7 @@ import { saveAs } from "file-saver";
 import { ClipboardCopyIcon } from "@heroicons/vue/outline";
 import copyToClipboard from "../utils/copyToClipboard";
 import { NTooltip } from "naive-ui";
-import ArrowDownIcon from "../assets/triangle-down.svg";
+import ArrowDownIcon from "@/assets/triangle-down.svg";
 
 export default {
   name: "UserProfile",

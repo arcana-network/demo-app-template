@@ -129,34 +129,13 @@ export default {
             })
             .then(async () => {
               // Wait till actions are dispatched to vuex store
-
-              // Create a user object with required details
-              let user = {
-                address: "",
-                myFiles: [],
-                sharedWithMe: [],
-                trash: [],
-              };
-
-              // Update app level limits for storage and bandwidth
-              await fileMixin.updateLimits();
-              let myfiles = []; // Add sdk function to fetch user uploaded files
-              myfiles = myfiles ? myfiles : []; // Reassign blank array in case of undefined
-              let sharedFiles = []; // Add sdk function to fetch files shared with the user
-              sharedFiles = sharedFiles ? sharedFiles : []; // Reassign blank array in case of undefined
-
-              // Adding file id in list as it is needed for rendering FilesList component
-              user.myFiles = myfiles.map((d) => {
-                d["fileId"] = d["did"];
-                return d;
-              });
-              user.sharedWithMe = sharedFiles.map((d) => {
-                d["fileId"] = d["did"];
-                return d;
+              toast("Login Success", {
+                styles: {
+                  backgroundColor: "green",
+                },
+                type: "success",
               });
 
-              // Update files in vuex store
-              store.dispatch("updateFiles", user);
               // Route to My Files and then hide loading animation
               router
                 .replace({ name: "My Files" })
