@@ -4,11 +4,6 @@ import router from "./router";
 import store from "./store";
 import DKToast from "vue-dk-toast";
 import "@/index.css";
-import { Buffer } from "buffer";
-
-// Added this for polyfilling buffer and global in browser
-window.Buffer = Buffer;
-globalThis.global = globalThis;
 
 const app = createApp(App);
 

@@ -169,42 +169,7 @@
       </div>
     </div>
   </div>
-  <!-- <div class="absolute top-7 right-6 lg:top-16 lg:right-16">
-    <div class="inline-block mr-5">
-      <div
-        class="inline-block rounded-full p-1 cursor-pointer"
-        style="background: #c6c9c9"
-      >
-        <SearchIcon class="h-6 w-6 inline-block text-white" />
-      </div>
-    </div>
-    <div
-      class="inline-block cursor-pointer list-type mt-1 lg"
-      :class="listType === 'grid' ? 'list-active' : ''"
-      style="
-        border-right: 1px solid #c6c9c9;
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
-        padding: 2px;
-      "
-      @click.stop="() => (listType = 'grid')"
-    >
-      <ViewGridIcon class="h-6 w-6 inline-block" />
-    </div>
-    <div
-      class="inline-block cursor-pointer list-type mt-1 lg:mt-2"
-      :class="listType === 'table' ? 'list-active' : ''"
-      style="
-        border-left: 1px solid #c6c9c9;
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-        padding: 2px;
-      "
-      @click.stop="() => (listType = 'table')"
-    >
-      <ViewListIcon class="h-6 w-6 inline-block" />
-    </div>
-  </div> -->
+
   <dialog-box v-if="shareDialog" @close="closeDialog">
     <h3 class="font-ubuntu font-bold" style="color: #253d52; font-size: 1.5em">
       Share file
@@ -502,7 +467,7 @@ export default {
       };
     }
 
-    function shareFile() {
+    async function shareFile() {
       const emails = shareEmail.value.split(",").map((email) => email.trim());
       for (let email of emails) {
         await fileMixin.share(fileToShare, email);
