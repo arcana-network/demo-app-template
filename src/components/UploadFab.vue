@@ -58,7 +58,10 @@ export default {
     }
 
     function fileChangeHandler(event) {
-      fileMixin.upload(this.files[0]);
+      if (this.files[0]) {
+        fileMixin.upload(this.files[0]);
+        file.value = "";
+      }
     }
 
     return {
