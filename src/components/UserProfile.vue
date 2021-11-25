@@ -259,7 +259,7 @@ export default {
       profileOptions,
       downloadKeys,
       toggleProfileOptions,
-      logout,
+      handleLogout,
       copy,
       ArrowDownIcon,
     };
