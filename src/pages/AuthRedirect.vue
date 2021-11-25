@@ -5,11 +5,15 @@
 <script>
 import { onMounted } from "@vue/runtime-core";
 
+import useArcanaAuth from "../use/arcanaAuth";
+
 export default {
   name: "AuthRedirect",
   setup() {
+    const { handleRedirect } = useArcanaAuth();
+
     onMounted(() => {
-      // Simple redirect page. Add your redirection logic here
+      handleRedirect();
     });
   },
 };
