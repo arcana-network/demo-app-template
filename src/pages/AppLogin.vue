@@ -15,7 +15,7 @@
       @click.stop="overrideClick"
       class="font-ubuntu"
     ></div>
-    <a class="google-button" @click.stop="onSignInClick">Sign In with Google</a>
+    <a class="google-button" @click.stop="signIn">Sign In with Google</a>
   </div>
 </template>
 
@@ -84,10 +84,10 @@
 
 <script>
 import { onBeforeMount, inject } from "@vue/runtime-core";
-import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { Wallet } from "ethers"; // Required for calculation of wallet address from private key
-import { useFileMixin } from "../mixins/file.mixin";
+import { useStore } from "vuex";
+
+import useArcanaAuth from "../use/arcanaAuth";
 
 export default {
   name: "AppLogin",
@@ -95,53 +95,30 @@ export default {
     const store = useStore();
     const router = useRouter();
     const toast = inject("$toast");
-    const fileMixin = useFileMixin(toast);
+
+    const { isLoggedIn, login } = useArcanaAuth();
 
     onBeforeMount(() => {
       document.title = "Login | Arcana Demo";
+      // If a user session exists on load, go through the sign-in process.
+      if (isLoggedIn()) {
+        signIn();
+      }
     });
 
-    async function onSignInClick() {
+    async function signIn() {
       try {
-        // Start loading animation with a message
-        store.dispatch("showLoader", "Fetching keys and wallet address...");
-        // Mocking timeout. Replace this with actual login functionality
-        setTimeout(() => {
-          // const wallet = new Wallet(privateKey); // To generate wallet address from private key
+        await login();
 
-          // Stores all the basic user details from google auth to vuex. Replace mock values with actual details
-          store.dispatch("addBasicDetails", {
-            email: "john-doe@gmail.com", // Replace with actual email
-            profileImage: "", // Replace with actual image url
-            givenName: "John Doe", // Replace with actual name
-          });
-
-          // Calculation of public key
-          // const actualPublicKey =
-          //   "0x04" + publicKey.X.padStart(64, "0") + publicKey.Y.padStart(64, "0");
-
-          // Stores all the crypto details to vuex
-          store
-            .dispatch("addCryptoDetails", {
-              walletAddress: "", // Actual wallet address calulated at line 110
-              privateKey: "<private-key-here>", // Actual private key received from login sdk
-              publicKey: "<public-key-here>", // Actual public key received from login sdk
-            })
-            .then(async () => {
-              // Wait till actions are dispatched to vuex store
-              toast("Login Success", {
-                styles: {
-                  backgroundColor: "green",
-                },
-                type: "success",
-              });
-
-              // Route to My Files and then hide loading animation
-              router
-                .replace({ name: "My Files" })
-                .then(() => store.dispatch("hideLoader"));
-            });
-        }, 2000);
+        store.dispatch("showLoader");
+        await router.push({ name: "My Files" });
+        store.dispatch("hideLoader");
+        toast("Login Success", {
+          styles: {
+            backgroundColor: "green",
+          },
+          type: "success",
+        });
       } catch (e) {
         // Catch errors and then hide loading animations
         toast("Something went wrong", {
@@ -151,12 +128,11 @@ export default {
           type: "error",
         });
         console.error("error", e);
-        store.dispatch("hideLoader");
       }
     }
 
     return {
-      onSignInClick,
+      signIn,
     };
   },
 };
