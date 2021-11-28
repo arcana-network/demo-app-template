@@ -245,9 +245,12 @@
 </style>
 
 <script>
+import bytes from "bytes";
+import isValidEmail from "pragmatic-email-regex";
+import moment from "moment";
 import { ref } from "@vue/reactivity";
 import { inject, onMounted, watch } from "@vue/runtime-core";
-
+import { NTooltip } from "naive-ui";
 import {
   ViewGridIcon,
   ViewListIcon,
@@ -259,15 +262,12 @@ import {
   XCircleIcon,
   RefreshIcon,
   SearchIcon,
+  BackspaceIcon,
+  InformationCircleIcon,
 } from "@heroicons/vue/outline";
-import { NTooltip } from "naive-ui";
-import DropdownMenu from "./DropdownMenu.vue";
-import DialogBox from "./DialogBox.vue";
-import isValidEmail from "pragmatic-email-regex";
 
-import bytes from "bytes";
-import moment from "moment";
-import { useFileMixin } from "../mixins/file.mixin";
+import DialogBox from "./DialogBox.vue";
+import useArcanaStorage from "../use/arcanaStorage";
 
 export default {
   name: "FilesList",
@@ -277,7 +277,8 @@ export default {
     ViewListIcon,
     DotsVerticalIcon,
     SearchIcon,
-    DropdownMenu,
+    InformationCircleIcon,
+    BackspaceIcon,
     NTooltip,
     DialogBox,
   },
@@ -293,29 +294,36 @@ export default {
       users: [],
     });
     let isShareEmailInvalid = ref(true);
-    const toast = inject("$toast");
-    const fileMixin = useFileMixin(toast);
-    let selectedFile;
+    const { download, remove, share, revoke, getSharedUsers } =
+      useArcanaStorage();
+    const GENESIS_ADDRESS = "0x0000000000000000000000000000000000000000";
 
     let menuItem = {};
+    let fileToShare;
     menuItem.verify = {
       label: "Verify",
       icon: PencilAltIcon,
-      command: () => {},
+      command: (selectedFile) => {
+        window.open(
+          "https://explorer.arcana.network/did/" + selectedFile.did,
+          "__blank"
+        );
+      },
     };
 
     menuItem.download = {
       label: "Download",
       icon: DownloadIcon,
-      command: () => {
-        fileMixin.download(selectedFile);
+      command: (selectedFile) => {
+        download(selectedFile);
       },
     };
 
     menuItem.share = {
       label: "Share",
       icon: ShareIcon,
-      command: () => {
+      command: (selectedFile) => {
+        fileToShare = selectedFile;
         shareDialog.value = true;
       },
     };
@@ -323,17 +331,17 @@ export default {
     menuItem.remove = {
       label: "Delete",
       icon: TrashIcon,
-      command: () => {
-        fileMixin.remove(selectedFile);
+      command: (selectedFile) => {
+        remove(selectedFile);
       },
     };
 
     menuItem.revoke = {
       label: "Revoke",
-      icon: PencilAltIcon,
-      command: () => {
+      icon: BackspaceIcon,
+      command: (selectedFile) => {
         revokeDialog.value = true;
-        getSharedUsers(selectedFile);
+        fetchSharedUsers(selectedFile);
       },
     };
 
@@ -421,18 +429,18 @@ export default {
     async function shareFile() {
       const emails = shareEmail.value.split(",").map((email) => email.trim());
       for (let email of emails) {
-        await fileMixin.share(fileToShare, email);
+        await share(fileToShare, email);
       }
       closeDialog();
     }
 
     async function revokeAccess(fileToRevoke, address) {
-      await fileMixin.revoke(fileToRevoke, address);
-      getSharedUsers(fileToRevoke);
+      await revoke(fileToRevoke, address);
+      fetchSharedUsers(fileToRevoke);
     }
 
-    function getSharedUsers(file) {
-      fileMixin.getSharedUsers(file.fileId).then((res) => {
+    function fetchSharedUsers(file) {
+      getSharedUsers(file.fileId).then((res) => {
         const users = res?.filter((user) => user !== GENESIS_ADDRESS);
         sharedUsers.value = {
           file,
@@ -462,17 +470,17 @@ export default {
       showMenu,
       menuItems,
       shareDialog,
+      revokeDialog,
+      sharedUsers,
       shareEmail,
       isShareEmailInvalid,
+      revokeAccess,
       fileMenu,
       closeDropdown,
       getReadableDate,
       getReadableSize,
       shareFile,
       closeDialog,
-      revokeDialog,
-      sharedUsers,
-      revokeAccess,
     };
   },
 };

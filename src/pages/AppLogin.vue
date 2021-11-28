@@ -100,7 +100,6 @@ export default {
 
     onBeforeMount(() => {
       document.title = "Login | Arcana Demo";
-      // If a user session exists on load, go through the sign-in process.
       if (isLoggedIn()) {
         signIn();
       }
@@ -120,7 +119,6 @@ export default {
           type: "success",
         });
       } catch (e) {
-        // Catch errors and then hide loading animations
         toast("Something went wrong", {
           styles: {
             backgroundColor: "red",
