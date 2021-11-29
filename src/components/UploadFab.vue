@@ -31,15 +31,15 @@
 </style>
 
 <script>
-import { inject, onBeforeUnmount, onMounted } from "@vue/runtime-core";
-import { useFileMixin } from "../mixins/file.mixin";
+import { onBeforeUnmount, onMounted } from "@vue/runtime-core";
+
+import useArcanaStorage from "../use/arcanaStorage";
 
 export default {
-  name: "UploadFab",
   setup() {
+    const { upload } = useArcanaStorage();
+
     let file;
-    const toast = inject("$toast");
-    const fileMixin = useFileMixin(toast);
 
     onMounted(() => {
       file = document.createElement("input");
@@ -57,13 +57,12 @@ export default {
       file.click();
     }
 
-    function fileChangeHandler(event) {
+    function fileChangeHandler() {
       if (this.files[0]) {
-        fileMixin.upload(this.files[0]);
+        upload(this.files[0]);
         file.value = "";
       }
     }
-
     return {
       openFileUploadView,
     };

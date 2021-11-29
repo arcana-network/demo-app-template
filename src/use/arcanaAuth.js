@@ -7,7 +7,7 @@ const ARCANA_APP_ID = import.meta.env.VITE_ARCANA_APP_ID;
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 // AUTH-1: Create an instance of Arcana AuthProvider.
-// const authInstance = ...
+const authInstance = {};
 
 function useArcanaAuth() {
   const store = useStore();
@@ -69,5 +69,7 @@ function useArcanaAuth() {
     logout,
   };
 }
+
+export { authInstance };
 
 export default useArcanaAuth;

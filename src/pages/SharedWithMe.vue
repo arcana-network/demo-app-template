@@ -5,7 +5,7 @@
       files-container
       fixed
       right-3
-      top-16
+      top-20
       lg:top-4
       overflow-y-auto
     "
@@ -18,41 +18,31 @@
 </template>
 
 <script>
-import { onMounted, computed } from "@vue/runtime-core";
-import UserProfile from "../components/UserProfile.vue";
-import FilesList from "../components/FilesList.vue";
+import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
+
+import FilesList from "../components/FilesList.vue";
+import useArcanaStorage from "../use/arcanaStorage";
+import UserProfile from "../components/UserProfile.vue";
 
 export default {
   name: "SharedWithMe",
-  components: { UserProfile, FilesList },
   setup() {
     const store = useStore();
-    // Get files from store
-    let files = computed(() => {
-      return store.getters.sharedWithMe;
-    });
+    const { fetchStorageLimits, fetchSharedFiles } = useArcanaStorage();
+
+    const files = computed(() => store.getters.sharedWithMe);
 
     onMounted(async () => {
       document.title = "Shared With Me | Arcana Demo";
-      store.dispatch("showLoader", "Fetching shared files...");
-      // Need to call shared with me api here to update it once mounted
-      let sharedFiles = [];
-      // Update the store with new shared with me files list
-      store.dispatch(
-        "updateSharedWithMe",
-        // Adding file id in list as it is needed for rendering FilesList component
-        sharedFiles.map((d) => {
-          d["fileId"] = d["did"];
-          return d;
-        })
-      );
-      store.dispatch("hideLoader");
+      await fetchStorageLimits();
+      await fetchSharedFiles();
     });
 
     return {
       files,
     };
   },
+  components: { UserProfile, FilesList },
 };
 </script>
