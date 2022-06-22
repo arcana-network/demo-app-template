@@ -4,7 +4,7 @@
       :message="fullScreenLoadingMessage" />
     <div v-else="isAppInitialised">
       <app-sidebar v-if="$route.name !== 'Login'" />
-      <router-view></router-view>
+      <router-view />
     </div>
   </fullsize-background>
 </template>
@@ -17,6 +17,8 @@ import { useStore } from "vuex";
 import AppSidebar from "./components/AppSidebar.vue";
 import FullScreenLoader from "./components/FullScreenLoader.vue";
 import FullsizeBackground from "./components/FullsizeBackground.vue";
+import useArcanaStorage from "./use/arcanaStorage";
+import useArcanaWallet from "./use/arcanaWallet";
 import useToast from "./use/toast";
 
 export default {
