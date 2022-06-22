@@ -10,22 +10,11 @@
       &
       <a href="/" style="color: #058aff; text-decoration: none"> Terms </a>
     </div>
-    <div
-      id="google-signin-button"
-      @click.stop="overrideClick"
-      class="font-ubuntu"
-    ></div>
-    <a class="google-button" @click.stop="signIn">Sign In with Google</a>
+    <a class="google-button" @click.stop="onSignInClick">Sign In with Google</a>
   </div>
 </template>
 
 <style scoped>
-#google-signin-button {
-  position: relative;
-  margin: 0 auto;
-  margin-top: 2rem;
-  width: 240px;
-}
 .login-container {
   min-width: 320px;
   max-width: 480px;
@@ -69,13 +58,14 @@
 }
 
 .google-button {
+  display: inline-block;
   padding: 0.8em 1.2em;
   border: 1px solid rgb(5, 138, 255);
   background-color: rgb(5, 138, 255);
   color: white;
   border-radius: 10px;
   cursor: pointer;
-  margin: 1em 0;
+  margin-top: 2rem;
   white-space: nowrap;
   font-weight: 800;
   font-size: 1.2em;
@@ -83,54 +73,31 @@
 </style>
 
 <script>
-import { onBeforeMount, inject } from "@vue/runtime-core";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { onMounted } from "vue";
 
-import useArcanaAuth from "../use/arcanaAuth";
+import useArcanaWallet from "../use/arcanaWallet";
+import useToast from "../use/toast";
 
 export default {
-  name: "AppLogin",
   setup() {
-    const store = useStore();
-    const router = useRouter();
-    const toast = inject("$toast");
+    const { toastError } = useToast();
+    const { requestSocialLogin } = useArcanaWallet();
 
-    const { isLoggedIn, login } = useArcanaAuth();
-
-    onBeforeMount(() => {
+    onMounted(async () => {
       document.title = "Login | Arcana Demo";
-      if (isLoggedIn()) {
-        signIn();
-      }
     });
 
-    async function signIn() {
+    async function onSignInClick() {
       try {
-        await login();
-
-        store.dispatch("showLoader");
-        await router.push({ name: "My Files" });
-        store.dispatch("hideLoader");
-        toast("Login Success", {
-          styles: {
-            backgroundColor: "green",
-          },
-          type: "success",
-        });
+        await requestSocialLogin("google");
       } catch (e) {
-        toast("Something went wrong", {
-          styles: {
-            backgroundColor: "red",
-          },
-          type: "error",
-        });
         console.error("error", e);
+        toastError("Something went wrong. Try again");
       }
     }
 
     return {
-      signIn,
+      onSignInClick,
     };
   },
 };
