@@ -15,7 +15,7 @@ const state = {
 
 const getters = {
   hasApprovedStorageLimitsRequest: (state) => {
-    return state.storageLimits.hasApprovedRequest;
+    return state.storageLimits.hasApprovedRequest
   },
   storageLimits: (state) => {
     return {
@@ -24,7 +24,7 @@ const getters = {
     };
   },
   hasApprovedBandwidthLimitsRequest: (state) => {
-    return state.bandwidthLimits.hasApprovedRequest;
+    return state.bandwidthLimits.hasApprovedRequest
   },
   bandwidthLimits: (state) => {
     return {
