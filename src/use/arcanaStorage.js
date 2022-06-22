@@ -1,169 +1,241 @@
 import bytes from "bytes";
-import { ref, onBeforeMount, inject } from "vue";
 import { useStore } from "vuex";
 
-import padPublicKey from "../utils/padPublicKey";
-import { authInstance } from "./arcanaAuth";
+import StorageService from "../services/storage.service";
+import AuthService from "../services/auth.service";
+import useArcanaWallet from "../use/arcanaWallet";
+import useToast from "../use/toast";
 
-const ARCANA_APP_ID = import.meta.env.VITE_ARCANA_APP_ID;
-
-const NO_SPACE = "No space left for user";
-const UNAUTHORIZED = "UNAUTHORIZED";
-
-const successToast = {
-  styles: {
-    backgroundColor: "green",
-  },
-  type: "success",
-};
-const errorToast = {
-  styles: {
-    backgroundColor: "red",
-  },
-  type: "error",
-};
+const FILE_SIZE_LIMIT = bytes("100MB");
 
 function useArcanaStorage() {
   const store = useStore();
-  const toast = inject("$toast");
-  const storageInstanceRef = ref(null);
+  const { toastSuccess, toastError } = useToast();
+  const { requestPublicKey } = useArcanaWallet();
 
-  let storageInstance;
-
-  onBeforeMount(() => {
-    if (!storageInstanceRef.value) {
-      // STORAGE-1: Create an instance of Arcana StorageProvider.
-      // storageInstanceRef.value = ...
-    }
-    storageInstance = storageInstanceRef.value;
-  });
+  function initStorage() {
+    StorageService.init();
+  }
 
   async function fetchStorageLimits() {
-    // STORAGE-2: Fetch the user's upload and download limits.
-    // store.dispatch("updateStorage", {
-    //   totalStorage,
-    //   storageUsed,
-    // });
-    // store.dispatch("updateBandwidth", {
-    //   totalBandwidth,
-    //   bandwidthUsed,
-    // });
+    try {
+      const [storageUsed, totalStorage] = await StorageService.getUploadLimit();
+      const [bandwidthUsed, totalBandwidth] =
+        await StorageService.getDownloadLimit();
+      store.dispatch("updateStorageLimits", {
+        totalStorage,
+        storageUsed,
+      });
+      store.dispatch("updateBandwidthLimits", {
+        totalBandwidth,
+        bandwidthUsed,
+      });
+    } catch (error) {
+      console.log(error);
+      toastError(error.message);
+    }
   }
 
   async function fetchMyFiles() {
-    store.dispatch("showLoader", "Fetching uploaded files...");
-    // STORAGE-3: Fetch the user's uploaded files.
-    // const myFiles = ...
-    // storage.dispatch("updateMyFiles", myFiles);
-    store.dispatch("hideLoader");
+    try {
+      const myFiles = await StorageService.myFiles();
+      store.dispatch("updateMyFiles", myFiles);
+    } catch (error) {
+      console.log(error);
+      toastError(error.message);
+    }
   }
 
   async function fetchSharedFiles() {
-    store.dispatch("showLoader", "Fetching shared files...");
-    // STORAGE-4: Fetch the user's uploaded files.
-    // const sharedFiles = ...
-    // storage.dispatch("updateMyFiles", sharedFiles);
-    store.dispatch("hideLoader");
+    try {
+      const sharedFiles = await StorageService.sharedFiles();
+      store.dispatch("updateSharedWithMe", sharedFiles);
+    } catch (error) {
+      console.log(error);
+      toastError(error.message);
+    }
   }
 
-  async function upload(fileToUpload) {
-    store.dispatch("showLoader", "Encrypting file...");
-    let uploadStart = Date.now(),
-      uploadDate = new Date(),
-      totalSize,
-      did;
+  async function upload(file) {
+    if (file.size > FILE_SIZE_LIMIT) {
+      toastError("You are not allowed to upload files bigger than 100MB.");
+      throw new Error("File size exceeded maximum");
+    }
 
-    // STORAGE-5: Upload a file.
-    store.dispatch("showLoader", "Uploading file to distributed storage...");
+    console.time("Upload");
+
+    try {
+      let uploadDate = new Date(),
+        totalSize;
+
+      store.dispatch("showInlineLoader", "Uploading file");
+
+      const did = await StorageService.upload(file, {
+        onProgress: (uploaded, total) => {
+          store.dispatch(
+            "showInlineLoader",
+            `Uploaded ${bytes(uploaded)} / ${bytes(total)}`
+          );
+          totalSize = total;
+        },
+        onError: (error) => {
+          console.error(error);
+          toastError(error.message);
+          store.dispatch("hideInlineLoader");
+        },
+        onSuccess: () => {
+          fetchStorageLimits();
+          toastSuccess("Upload success");
+          let myFiles = [...store.getters.myFiles];
+          myFiles.push({
+            did,
+            createdAt: uploadDate,
+            size: totalSize,
+          });
+          store.dispatch("updateMyFiles", myFiles);
+          store.dispatch("hideInlineLoader");
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      toastError(error.message);
+    } finally {
+      console.timeEnd("Upload");
+      store.dispatch("hideInlineLoader");
+    }
   }
 
   async function download(file) {
-    store.dispatch(
-      "showLoader",
-      "Downloading chunks from distributed storage..."
-    );
-
-    let did = file.fileId;
-    did = did.substring(0, 2) !== "0x" ? "0x" + did : did;
-
-    // STORAGE-6: Download a file.
-  }
-
-  async function share(fileToShare, email) {
-    store.dispatch("showLoader", "Sharing file...");
-
-    let did = fileToShare.fileId;
-    did = did.substring(0, 2) != "0x" ? "0x" + did : did;
-
-    const publicKey = await authInstance.getPublicKey({
-      verifier: "google",
-      id: email,
-    });
-    const actualPublicKey = padPublicKey(publicKey);
-
-    const validity = 1000000;
+    console.time("Download");
 
     try {
-      // STORAGE-7: Share a file.
+      store.dispatch("showInlineLoader", "Downloading file");
 
-      toast(`Shared file successfully with ${email}`, successToast);
+      await StorageService.download(file.fileId, {
+        onProgress: (downloaded, total) => {
+          store.dispatch(
+            "showInlineLoader",
+            `Downloaded ${bytes(downloaded)} / ${bytes(total)}`
+          );
+        },
+        onSuccess: () => {
+          fetchStorageLimits();
+          toastSuccess("Download success");
+          store.dispatch("hideInlineLoader");
+        },
+      });
     } catch (error) {
-      toast("Something went wrong. Try again", errorToast);
+      console.error(error);
+      toastError(error.message);
+    } finally {
+      console.timeEnd("Download");
+      store.dispatch("hideInlineLoader");
     }
+  }
 
-    store.dispatch("hideLoader");
+  async function remove(file) {
+    console.time("Delete");
+
+    try {
+      store.dispatch("showInlineLoader", "Deleting file");
+
+      await StorageService.remove(file.fileId);
+      let myFiles = [...store.getters.myFiles];
+      myFiles = myFiles.filter((myFile) => myFile.fileId !== file.fileId);
+      store.dispatch("updateMyFiles", myFiles);
+
+      fetchStorageLimits();
+      toastSuccess("Delete success");
+    } catch (error) {
+      console.error(error);
+      toastError(error.message);
+    } finally {
+      console.timeEnd("Delete");
+      store.dispatch("hideInlineLoader");
+    }
+  }
+
+  async function share(file, email) {
+    console.time("Share");
+
+    try {
+      store.dispatch("showInlineLoader", "Sharing file");
+
+      const publicKey = await requestPublicKey(email);
+      const address = AuthService.computeAddress(publicKey);
+      await StorageService.share(file.fileId, address);
+      toastSuccess(`Shared file successfully with ${email}`);
+    } catch (error) {
+      console.error(error);
+      toastError(error.message);
+    } finally {
+      console.timeEnd("Share");
+      store.dispatch("hideInlineLoader");
+    }
   }
 
   async function getSharedUsers(did) {
     try {
-      // STORAGE-8: Get a list of shared users.
+      store.dispatch("showInlineLoader", "Fetch shared users");
+
+      return await StorageService.getSharedUsers(did);
     } catch (error) {
-      toast(
-        "Something went wrong while fetching shared users list",
-        errorToast
-      );
+      console.error(error);
+      toastError(error.message);
+    } finally {
+      store.dispatch("hideInlineLoader");
     }
   }
 
   async function revoke(fileToRevoke, address) {
-    store.dispatch("showLoader", "Revoking file access...");
-
-    const did = fileToRevoke.fileId;
-    const fileId = did.substring(0, 2) !== "0x" ? "0x" + did : did;
-
     try {
-      // STORAGE-9: Revoke access to a shared file.
+      store.dispatch("showInlineLoader", "Revoking file access");
 
-      toast(`File Access Revoked`, successToast);
+      await StorageService.revoke(fileToRevoke.fileId, address);
+      toastSuccess("File access revoked");
     } catch (error) {
-      toast("Something went wrong. Try again", errorToast);
+      console.error(error);
+      toastError(error.message);
+    } finally {
+      console.timeEnd("Revoke");
+      store.dispatch("hideInlineLoader");
     }
-
-    store.dispatch("hideLoader");
   }
 
-  async function remove(fileToDelete) {
-    store.dispatch("showLoader", "Deleting file...");
-
-    let did = fileToDelete.fileId;
-    did = did.substring(0, 2) != "0x" ? "0x" + did : did;
+  async function changeFileOwner(fileToTransfer, email) {
+    console.time("Transfer");
 
     try {
-      // STORAGE-10: Delete a file.
+      store.dispatch("showInlineLoader", "Transfering file");
 
-      toast(`File Deleted`, successToast);
+      const publicKey = await requestPublicKey(email);
+      const address = AuthService.computeAddress(publicKey);
+      await StorageService.changeFileOwner(fileToTransfer.fileId, address);
+
+      let myFiles = [...store.getters.myFiles];
+      myFiles = myFiles.filter((file) => file.did !== fileToTransfer.fileId);
+      store.dispatch("updateMyFiles", myFiles);
+
+      await fetchStorageLimits();
+
+      toastSuccess(`Transferred file ownership to ${email}`);
     } catch (error) {
-      toast("Something went wrong. Try again", errorToast);
+      console.error(error);
+      toastError(error.message);
+    } finally {
+      console.timeEnd("Transfer");
+      store.dispatch("hideInlineLoader");
     }
-    store.dispatch("hideLoader");
   }
 
   return {
+    changeFileOwner,
     download,
     fetchMyFiles,
     fetchSharedFiles,
     fetchStorageLimits,
     getSharedUsers,
+    initStorage,
     remove,
     revoke,
     share,
