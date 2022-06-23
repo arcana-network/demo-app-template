@@ -1,4 +1,4 @@
-// AUTH-IMPORT: Import auth from window instead of npm
+// AUTH-IMPORT: Import Arcana auth
 // ...
 
 function createAuthService() {

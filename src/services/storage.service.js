@@ -1,4 +1,4 @@
-// STORAGE-IMPORT : Import storage from window instead of npm
+// STORAGE-IMPORT : Import Arcana storage standalone
 // ...
 
 function createStorageService() {
