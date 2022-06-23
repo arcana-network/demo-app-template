@@ -4,8 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview",
-    "copy-deps": "cp ./node_modules/@arcana/auth/dist/standalone/auth.min.js ./public & cp ./node_modules/@arcana/storage/dist/standalone/storage.umd.js ./public"
+    "serve": "vite preview"
   },
   "dependencies": {
     "@heroicons/vue": "^1.0.1",
