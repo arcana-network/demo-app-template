@@ -16,7 +16,7 @@ function createAuthService() {
   }
 
   async function requestSocialLogin(type) {
-    // AUTH-4: Sign in user with SSO with selected login type.
+    // AUTH-4: Sign in user with OAuth with selected login type.
     // ...
   }
 
