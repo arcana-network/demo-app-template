@@ -3,7 +3,7 @@
 
 function createAuthService() {
   // AUTH-1: Create a new instance of Arcana AuthProvider.
-  // ...
+  // const wallet = ...
 
   async function init() {
     // AUTH-2: Initialize the wallet with App Mode (UI / NoUI).
