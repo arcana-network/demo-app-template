@@ -173,7 +173,7 @@ function useArcanaStorage() {
 
       // STORAGE-8: Delete a file
       // a) Get access object from storage instance
-      const assess = FIX_ME;
+      const access = FIX_ME;
       // b) Delete the file using access object
       // ...
 
@@ -203,7 +203,7 @@ function useArcanaStorage() {
       // b) Compute wallet address using public key
       const address = FIX_ME;
       // c) Get access object from storage instance
-      const assess = FIX_ME;
+      const access = FIX_ME;
       // d) Share a file to this address
       // ...
 
@@ -225,7 +225,7 @@ function useArcanaStorage() {
 
       // STORAGE-10: Get list of users, the file is shared with
       // a) Get access object from storage instance
-      const assess = FIX_ME;
+      const access = FIX_ME;
       // b) Get shared users
       const sharedUsers = FIX_ME;
 
@@ -246,7 +246,7 @@ function useArcanaStorage() {
 
       // STORAGE-11: Revoke access to a shared file
       // a) Get access object from storage instance
-      const assess = FIX_ME;
+      const access = FIX_ME;
       // b) Revoke share access
       // ...
 
@@ -274,7 +274,7 @@ function useArcanaStorage() {
       // b) Compute wallet address using public key
       const address = FIX_ME;
       // c) Get access object from storage instance and
-      const assess = FIX_ME;
+      const access = FIX_ME;
       // d) Transfer ownership of this file to that address
       // ...
 
