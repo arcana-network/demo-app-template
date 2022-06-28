@@ -57,13 +57,11 @@ const mutations = {
   },
   updateMyFiles(state, myFiles) {
     state.myFiles = myFiles.map((file) => {
-      file.fileId = file.did;
       return file;
     });
   },
   updateSharedWithMe(state, sharedWithMe) {
     state.sharedWithMe = sharedWithMe.map((file) => {
-      file.fileId = file.did;
       return file;
     });
   },
@@ -72,7 +70,7 @@ const mutations = {
   },
   removeMyFiles(state, fileDetails) {
     state.myFiles = state.myFiles.filter(
-      (myFile) => myFile.fileId !== fileDetails.fileId
+      (myFile) => myFile.did !== fileDetails.did
     );
   },
 };
