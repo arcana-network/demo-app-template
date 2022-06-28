@@ -93,9 +93,9 @@ function useArcanaStorage() {
       // STORAGE-6: Upload a file
       // a) Get uploader object from storage instance
       const uploader = FIX_ME;
-      // b) Upload a file and get the did
+      // b) Handle progress, success and error events
+      // c) Upload a file and get the did
       const did = FIX_ME;
-      // c) Handle progress, success and error events
 
       function onProgress(uploaded, total) {
         store.dispatch(
@@ -116,7 +116,7 @@ function useArcanaStorage() {
         toastSuccess("Upload success");
         store.dispatch("addMyFiles", {
           did,
-          createdAt: uploadedDate,
+          createdAt: uploadDate,
           size: totalSize,
         });
         store.dispatch("hideInlineLoader");
@@ -141,8 +141,8 @@ function useArcanaStorage() {
       // STORAGE-7: Download a file
       // a) Get downloader object from storage instance
       const downloader = FIX_ME;
-      // b) Download a file
-      // c) Handle progress and success events
+      // b) Handle progress and success events
+      // c) Download a file
 
       function onProgress(downloaded, total) {
         store.dispatch(
