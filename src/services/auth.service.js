@@ -1,61 +1,17 @@
 // AUTH-IMPORT: Import Arcana auth
 // ...
 
+const FIX_ME = null;
+
 function createAuthService() {
   // AUTH-1: Create a new instance of Arcana AuthProvider.
-  // const wallet = ...
+  const auth = FIX_ME;
 
-  async function init() {
-    // AUTH-2: Initialize the wallet with App Mode (UI / NoUI).
-    // ...
+  function getInstance() {
+    return auth;
   }
 
-  async function isLoggedIn() {
-    // AUTH-3: Check if the user is already logged in.
-    // ...
-  }
-
-  async function requestSocialLogin(type) {
-    // AUTH-4: Sign in user with OAuth with selected login type.
-    // ...
-  }
-
-  async function requestUserInfo() {
-    // AUTH-5: Fetch the logged in user's information.
-    // ...
-  }
-
-  async function requestPublicKey(email) {
-    // AUTH-6: Fetch public key for the email.
-    // ...
-  }
-
-  async function logout() {
-    // AUTH-7: Log a user out.
-    // ...
-  }
-
-  async function requestWalletInfo() {
-    // AUTH-8: Fetch all the available accounts from the wallet.
-    // ...
-  }
-
-  function setHook(event, handler) {
-    // AUTH-9: Listen to events from the wallet.
-    // ...
-  }
-
-  return {
-    computeAddress,
-    init,
-    isLoggedIn,
-    logout,
-    requestPublicKey,
-    requestSocialLogin,
-    requestUserInfo,
-    requestWalletInfo,
-    setHook,
-  };
+  return { getInstance };
 }
 
 const AuthService = Object.freeze(createAuthService());

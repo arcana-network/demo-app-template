@@ -131,7 +131,7 @@ import { NTooltip } from "naive-ui";
 import { useStore } from "vuex";
 
 import copyToClipboard from "../utils/copyToClipboard";
-import useArcanaWallet from "../use/arcanaWallet";
+import useArcanaAuth from "../use/arcanaAuth";
 import useToast from "../use/toast";
 
 import ArrowDownIcon from "../assets/triangle-down.svg";
@@ -142,7 +142,7 @@ export default {
     const store = useStore();
     const { toastSuccess, toastError } = useToast();
 
-    const { logout } = useArcanaWallet();
+    const { logout } = useArcanaAuth();
 
     const userInfo = computed(() => store.getters.userInfo);
     const walletInfo = computed(() => store.getters.walletInfo);

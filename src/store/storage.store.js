@@ -15,7 +15,7 @@ const state = {
 
 const getters = {
   hasApprovedStorageLimitsRequest: (state) => {
-    return state.storageLimits.hasApprovedRequest
+    return state.storageLimits.hasApprovedRequest;
   },
   storageLimits: (state) => {
     return {
@@ -24,7 +24,7 @@ const getters = {
     };
   },
   hasApprovedBandwidthLimitsRequest: (state) => {
-    return state.bandwidthLimits.hasApprovedRequest
+    return state.bandwidthLimits.hasApprovedRequest;
   },
   bandwidthLimits: (state) => {
     return {
@@ -57,15 +57,21 @@ const mutations = {
   },
   updateMyFiles(state, myFiles) {
     state.myFiles = myFiles.map((file) => {
-      file.fileId = file.did;
       return file;
     });
   },
   updateSharedWithMe(state, sharedWithMe) {
     state.sharedWithMe = sharedWithMe.map((file) => {
-      file.fileId = file.did;
       return file;
     });
+  },
+  addMyFiles(state, fileDetails) {
+    state.myFiles = [...state.myFiles, fileDetails];
+  },
+  removeMyFiles(state, fileDetails) {
+    state.myFiles = state.myFiles.filter(
+      (myFile) => myFile.did !== fileDetails.did
+    );
   },
 };
 
@@ -83,6 +89,12 @@ const actions = {
   },
   updateMyFiles({ commit }, myFiles) {
     commit("updateMyFiles", myFiles);
+  },
+  addMyFiles({ commit }, fileDetails) {
+    commit("addMyFiles", fileDetails);
+  },
+  removeMyFiles({ commit }, fileDetails) {
+    commit("removeMyFiles", fileDetails);
   },
 };
 

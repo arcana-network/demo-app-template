@@ -3,25 +3,35 @@ import { useStore } from "vuex";
 
 import StorageService from "../services/storage.service";
 import AuthService from "../services/auth.service";
-import useArcanaWallet from "../use/arcanaWallet";
+import useArcanaAuth from "../use/arcanaAuth";
 import useToast from "../use/toast";
 
 const FILE_SIZE_LIMIT = bytes("100MB");
 
+const FIX_ME = null;
+
 function useArcanaStorage() {
   const store = useStore();
   const { toastSuccess, toastError } = useToast();
-  const { requestPublicKey } = useArcanaWallet();
+  const { requestPublicKey } = useArcanaAuth();
 
   function initStorage() {
-    StorageService.init();
+    // STORAGE-2: Initialize the storage instance
+    // ...
   }
 
   async function fetchStorageLimits() {
+    const storage = StorageService.getInstance();
+
     try {
-      const [storageUsed, totalStorage] = await StorageService.getUploadLimit();
-      const [bandwidthUsed, totalBandwidth] =
-        await StorageService.getDownloadLimit();
+      // STORAGE-3: Fetch storage limits
+      // a) Get the access object from storage instance
+      const access = FIX_ME;
+      // b) Get upload limit and download limit using this access object
+      // ...
+      const [storageUsed, totalStorage] = [FIX_ME, FIX_ME];
+      const [bandwidthUsed, totalBandwidth] = [FIX_ME, FIX_ME];
+
       store.dispatch("updateStorageLimits", {
         totalStorage,
         storageUsed,
@@ -37,8 +47,12 @@ function useArcanaStorage() {
   }
 
   async function fetchMyFiles() {
+    const storage = StorageService.getInstance();
+
     try {
-      const myFiles = await StorageService.myFiles();
+      // STORAGE-4: Get files owned by the user from storage instance
+      const myFiles = FIX_ME;
+
       store.dispatch("updateMyFiles", myFiles);
     } catch (error) {
       console.log(error);
@@ -47,8 +61,12 @@ function useArcanaStorage() {
   }
 
   async function fetchSharedFiles() {
+    const storage = StorageService.getInstance();
+
     try {
-      const sharedFiles = await StorageService.sharedFiles();
+      // STORAGE-5: Get files shared with the user from storage instance
+      const sharedFiles = FIX_ME;
+
       store.dispatch("updateSharedWithMe", sharedFiles);
     } catch (error) {
       console.log(error);
@@ -57,6 +75,8 @@ function useArcanaStorage() {
   }
 
   async function upload(file) {
+    const storage = StorageService.getInstance();
+
     if (file.size > FILE_SIZE_LIMIT) {
       toastError("You are not allowed to upload files bigger than 100MB.");
       throw new Error("File size exceeded maximum");
@@ -70,32 +90,37 @@ function useArcanaStorage() {
 
       store.dispatch("showInlineLoader", "Uploading file");
 
-      const did = await StorageService.upload(file, {
-        onProgress: (uploaded, total) => {
-          store.dispatch(
-            "showInlineLoader",
-            `Uploaded ${bytes(uploaded)} / ${bytes(total)}`
-          );
-          totalSize = total;
-        },
-        onError: (error) => {
-          console.error(error);
-          toastError(error.message);
-          store.dispatch("hideInlineLoader");
-        },
-        onSuccess: () => {
-          fetchStorageLimits();
-          toastSuccess("Upload success");
-          let myFiles = [...store.getters.myFiles];
-          myFiles.push({
-            did,
-            createdAt: uploadDate,
-            size: totalSize,
-          });
-          store.dispatch("updateMyFiles", myFiles);
-          store.dispatch("hideInlineLoader");
-        },
-      });
+      // STORAGE-6: Upload a file
+      // a) Get uploader object from storage instance
+      const uploader = FIX_ME;
+      // b) Handle progress, success and error events
+      // c) Upload a file and get the did
+      const did = FIX_ME;
+
+      function onProgress(uploaded, total) {
+        store.dispatch(
+          "showInlineLoader",
+          `Uploaded ${bytes(uploaded)} / ${bytes(total)}`
+        );
+        totalSize = total;
+      }
+
+      function onError(error) {
+        console.error(error);
+        toastError(error.message);
+        store.dispatch("hideInlineLoader");
+      }
+
+      function onSuccess() {
+        fetchStorageLimits();
+        toastSuccess("Upload success");
+        store.dispatch("addMyFiles", {
+          did,
+          createdAt: uploadDate,
+          size: totalSize,
+        });
+        store.dispatch("hideInlineLoader");
+      }
     } catch (error) {
       console.error(error);
       toastError(error.message);
@@ -106,24 +131,31 @@ function useArcanaStorage() {
   }
 
   async function download(file) {
+    const storage = StorageService.getInstance();
+
     console.time("Download");
 
     try {
       store.dispatch("showInlineLoader", "Downloading file");
 
-      await StorageService.download(file.fileId, {
-        onProgress: (downloaded, total) => {
-          store.dispatch(
-            "showInlineLoader",
-            `Downloaded ${bytes(downloaded)} / ${bytes(total)}`
-          );
-        },
-        onSuccess: () => {
-          fetchStorageLimits();
-          toastSuccess("Download success");
-          store.dispatch("hideInlineLoader");
-        },
-      });
+      // STORAGE-7: Download a file
+      // a) Get downloader object from storage instance
+      const downloader = FIX_ME;
+      // b) Handle progress and success events
+      // c) Download a file
+
+      function onProgress(downloaded, total) {
+        store.dispatch(
+          "showInlineLoader",
+          `Downloaded ${bytes(downloaded)} / ${bytes(total)}`
+        );
+      }
+
+      function onSuccess() {
+        fetchStorageLimits();
+        toastSuccess("Download success");
+        store.dispatch("hideInlineLoader");
+      }
     } catch (error) {
       console.error(error);
       toastError(error.message);
@@ -134,16 +166,20 @@ function useArcanaStorage() {
   }
 
   async function remove(file) {
+    const storage = StorageService.getInstance();
+
     console.time("Delete");
 
     try {
       store.dispatch("showInlineLoader", "Deleting file");
 
-      await StorageService.remove(file.fileId);
-      let myFiles = [...store.getters.myFiles];
-      myFiles = myFiles.filter((myFile) => myFile.fileId !== file.fileId);
-      store.dispatch("updateMyFiles", myFiles);
+      // STORAGE-8: Delete a file
+      // a) Get access object from storage instance
+      const access = FIX_ME;
+      // b) Delete the file using access object
+      // ...
 
+      storage.dispatch("removeMyFiles", file);
       fetchStorageLimits();
       toastSuccess("Delete success");
     } catch (error) {
@@ -156,14 +192,23 @@ function useArcanaStorage() {
   }
 
   async function share(file, email) {
+    const storage = StorageService.getInstance();
+
     console.time("Share");
 
     try {
       store.dispatch("showInlineLoader", "Sharing file");
 
-      const publicKey = await requestPublicKey(email);
-      const address = AuthService.computeAddress(publicKey);
-      await StorageService.share(file.fileId, address);
+      // STORAGE-9: Share a file
+      // a) Get public key of user using his email
+      const publicKey = FIX_ME;
+      // b) Compute wallet address using public key
+      const address = FIX_ME;
+      // c) Get access object from storage instance
+      const access = FIX_ME;
+      // d) Share a file to this address
+      // ...
+
       toastSuccess(`Shared file successfully with ${email}`);
     } catch (error) {
       console.error(error);
@@ -175,10 +220,18 @@ function useArcanaStorage() {
   }
 
   async function getSharedUsers(did) {
+    const storage = StorageService.getInstance();
+
     try {
       store.dispatch("showInlineLoader", "Fetch shared users");
 
-      return await StorageService.getSharedUsers(did);
+      // STORAGE-10: Get list of users, the file is shared with
+      // a) Get access object from storage instance
+      const access = FIX_ME;
+      // b) Get shared users
+      const sharedUsers = FIX_ME;
+
+      return sharedUsers;
     } catch (error) {
       console.error(error);
       toastError(error.message);
@@ -188,10 +241,17 @@ function useArcanaStorage() {
   }
 
   async function revoke(fileToRevoke, address) {
+    const storage = StorageService.getInstance();
+
     try {
       store.dispatch("showInlineLoader", "Revoking file access");
 
-      await StorageService.revoke(fileToRevoke.fileId, address);
+      // STORAGE-11: Revoke access to a shared file
+      // a) Get access object from storage instance
+      const access = FIX_ME;
+      // b) Revoke share access
+      // ...
+
       toastSuccess("File access revoked");
     } catch (error) {
       console.error(error);
@@ -203,21 +263,25 @@ function useArcanaStorage() {
   }
 
   async function changeFileOwner(fileToTransfer, email) {
+    const storage = StorageService.getInstance();
+
     console.time("Transfer");
 
     try {
       store.dispatch("showInlineLoader", "Transfering file");
 
-      const publicKey = await requestPublicKey(email);
-      const address = AuthService.computeAddress(publicKey);
-      await StorageService.changeFileOwner(fileToTransfer.fileId, address);
+      // STORAGE-12: Transfer ownership of the file
+      // a) Get public key of user using his email
+      const publicKey = FIX_ME;
+      // b) Compute wallet address using public key
+      const address = FIX_ME;
+      // c) Get access object from storage instance and
+      const access = FIX_ME;
+      // d) Transfer ownership of this file to that address
+      // ...
 
-      let myFiles = [...store.getters.myFiles];
-      myFiles = myFiles.filter((file) => file.did !== fileToTransfer.fileId);
-      store.dispatch("updateMyFiles", myFiles);
-
-      await fetchStorageLimits();
-
+      store.dispatch("removeMyFiles", fileToTransfer);
+      fetchStorageLimits();
       toastSuccess(`Transferred file ownership to ${email}`);
     } catch (error) {
       console.error(error);

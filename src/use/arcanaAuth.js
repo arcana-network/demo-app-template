@@ -3,58 +3,70 @@ import { useRouter } from "vue-router";
 
 import AuthService from "../services/auth.service";
 
-function useArcanaWallet() {
+const FIX_ME = null;
+
+function useArcanaAuth() {
   const store = useStore();
   const router = useRouter();
 
-  async function initWallet() {
-    store.dispatch("showFullScreenLoader", "Initialising Arcana wallet...");
+  const auth = AuthService.getInstance();
 
-    await AuthService.init();
+  async function initAuth() {
+    store.dispatch("showFullScreenLoader", "Initialising Arcana auth...");
 
-    AuthService.setHook("disconnect", async () => {
-      store.dispatch("clearStore");
-      router.push("/login");
-      router.go();
-    });
+    // AUTH-2: Initialise and configure the auth service.
+    // a) Initialise the auth service
+    // b) Set a disconnect listener. On disconnect, clear store,
+    //    route to login and perform a refresh
+    // ...
 
     store.dispatch("hideFullScreenLoader");
   }
 
   async function isLoggedIn() {
     store.dispatch("showFullScreenLoader", "Checking login status...");
-    const loginStatus = await AuthService.isLoggedIn();
+
+    // AUTH-3: Check if a user is logged in
+    const loginStatus = FIX_ME;
+
     store.dispatch("hideFullScreenLoader");
     return loginStatus;
   }
 
   async function requestSocialLogin(type) {
-    await AuthService.requestSocialLogin(type);
+    // AUTH-4: Login user with selected social login type
+    // ...
   }
 
   async function fetchUserDetails() {
     store.dispatch("showFullScreenLoader", "Fetching account details...");
 
-    const userInfo = await AuthService.requestUserInfo();
+    // AUTH-5: Fetch user details
+    const userInfo = FIX_ME;
+
     store.dispatch("addUserInfo", JSON.parse(userInfo));
 
-    const [walletAddress] = await AuthService.requestWalletInfo();
+    // AUTH-6: Fetch user's wallet address
+    const walletAddress = FIX_ME;
+
     store.dispatch("addWalletInfo", { address: walletAddress });
 
     store.dispatch("hideFullScreenLoader");
   }
 
   async function logout() {
-    await AuthService.logout();
+    // AUTH-7: Logout a user
+    // ...
   }
 
   async function requestPublicKey(email) {
-    return await AuthService.requestPublicKey(email);
+    // AUTH-8: Get public key associated with the email
+    // ...
   }
 
   return {
     fetchUserDetails,
-    initWallet,
+    initAuth,
     isLoggedIn,
     logout,
     requestPublicKey,
@@ -62,4 +74,4 @@ function useArcanaWallet() {
   };
 }
 
-export default useArcanaWallet;
+export default useArcanaAuth;
