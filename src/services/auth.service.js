@@ -1,32 +1,17 @@
 // AUTH-IMPORT: Import Arcana auth
 // ...
 
+const FIX_ME = null;
+
 function createAuthService() {
   // AUTH-1: Create a new instance of Arcana AuthProvider.
-  // const wallet = ...
-
-  async function init() {
-    // AUTH-2: Initialize the wallet with App Mode (UI / NoUI).
-    // ...
-  }
-
-  function setHook(event, handler) {
-    // AUTH-3: Listen to events from the wallet.
-    // ...
-    const provider = wallet.provider;
-    provider.on(event, handler);
-  }
+  const auth = FIX_ME;
 
   function getInstance() {
-    return wallet;
+    return auth;
   }
 
-  return {
-    init,
-    setHook,
-    getInstance,
-    computeAddress,
-  };
+  return { getInstance };
 }
 
 const AuthService = Object.freeze(createAuthService());

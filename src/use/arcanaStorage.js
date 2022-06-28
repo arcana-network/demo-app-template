@@ -3,7 +3,7 @@ import { useStore } from "vuex";
 
 import StorageService from "../services/storage.service";
 import AuthService from "../services/auth.service";
-import useArcanaWallet from "../use/arcanaWallet";
+import useArcanaAuth from "../use/arcanaAuth";
 import useToast from "../use/toast";
 
 const FILE_SIZE_LIMIT = bytes("100MB");
@@ -11,7 +11,7 @@ const FILE_SIZE_LIMIT = bytes("100MB");
 function useArcanaStorage() {
   const store = useStore();
   const { toastSuccess, toastError } = useToast();
-  const { requestPublicKey } = useArcanaWallet();
+  const { requestPublicKey } = useArcanaAuth();
 
   function initStorage() {
     // STORAGE-2: Initialize the storage instance

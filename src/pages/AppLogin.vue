@@ -75,13 +75,13 @@
 <script>
 import { onMounted } from "vue";
 
-import useArcanaWallet from "../use/arcanaWallet";
+import useArcanaAuth from "../use/arcanaAuth";
 import useToast from "../use/toast";
 
 export default {
   setup() {
     const { toastError } = useToast();
-    const { requestSocialLogin } = useArcanaWallet();
+    const { requestSocialLogin } = useArcanaAuth();
 
     onMounted(async () => {
       document.title = "Login | Arcana Demo";

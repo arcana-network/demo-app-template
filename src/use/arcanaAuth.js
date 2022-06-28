@@ -3,16 +3,21 @@ import { useRouter } from "vue-router";
 
 import AuthService from "../services/auth.service";
 
-function useArcanaWallet() {
+const FIX_ME = null;
+
+function useArcanaAuth() {
   const store = useStore();
   const router = useRouter();
 
-  async function initWallet() {
-    store.dispatch("showFullScreenLoader", "Initialising Arcana wallet...");
+  const auth = AuthService.getInstance();
 
-    // AUTH-4: Initialise the wallet using AuthService
-    // After initialization, set a disconnect listener
-    // On disconnect, clear store, route to login and perform a refresh
+  async function initAuth() {
+    store.dispatch("showFullScreenLoader", "Initialising Arcana auth...");
+
+    // AUTH-2: Initialise and configure the auth service.
+    // a) Initialise the auth service
+    // b) Set a disconnect listener. On disconnect, clear store,
+    //    route to login and perform a refresh
     // ...
 
     store.dispatch("hideFullScreenLoader");
@@ -20,28 +25,29 @@ function useArcanaWallet() {
 
   async function isLoggedIn() {
     store.dispatch("showFullScreenLoader", "Checking login status...");
-    // AUTH-5: Check if a user is logged in
-    // ...
+
+    // AUTH-3: Check if a user is logged in
+    const loginStatus = FIX_ME;
 
     store.dispatch("hideFullScreenLoader");
     return loginStatus;
   }
 
   async function requestSocialLogin(type) {
-    // AUTH-6: Login user with selected social login type
+    // AUTH-4: Login user with selected social login type
     // ...
   }
 
   async function fetchUserDetails() {
     store.dispatch("showFullScreenLoader", "Fetching account details...");
 
-    // AUTH-7: Fetch user details
-    // ...
+    // AUTH-5: Fetch user details
+    const userInfo = FIX_ME;
 
     store.dispatch("addUserInfo", JSON.parse(userInfo));
 
-    // AUTH-8: Fetch user's wallet address
-    // ...
+    // AUTH-6: Fetch user's wallet address
+    const walletAddress = FIX_ME;
 
     store.dispatch("addWalletInfo", { address: walletAddress });
 
@@ -49,18 +55,18 @@ function useArcanaWallet() {
   }
 
   async function logout() {
-    // AUTH-9: Logout a user
+    // AUTH-7: Logout a user
     // ...
   }
 
   async function requestPublicKey(email) {
-    // AUTH-10: Get public key associated with the email
+    // AUTH-8: Get public key associated with the email
     // ...
   }
 
   return {
     fetchUserDetails,
-    initWallet,
+    initAuth,
     isLoggedIn,
     logout,
     requestPublicKey,
@@ -68,4 +74,4 @@ function useArcanaWallet() {
   };
 }
 
-export default useArcanaWallet;
+export default useArcanaAuth;

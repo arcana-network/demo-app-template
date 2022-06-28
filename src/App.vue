@@ -1,7 +1,10 @@
 <template>
   <fullsize-background>
-    <full-screen-loader v-if="isLoadingFullScreen || !isAppInitialised" :key="'arcana-demo-app-loader'"
-      :message="fullScreenLoadingMessage" />
+    <full-screen-loader
+      v-if="isLoadingFullScreen || !isAppInitialised"
+      :key="'arcana-demo-app-loader'"
+      :message="fullScreenLoadingMessage"
+    />
     <div v-else="isAppInitialised">
       <app-sidebar v-if="$route.name !== 'Login'" />
       <router-view />
@@ -18,7 +21,7 @@ import AppSidebar from "./components/AppSidebar.vue";
 import FullScreenLoader from "./components/FullScreenLoader.vue";
 import FullsizeBackground from "./components/FullsizeBackground.vue";
 import useArcanaStorage from "./use/arcanaStorage";
-import useArcanaWallet from "./use/arcanaWallet";
+import useArcanaAuth from "./use/arcanaAuth";
 import useToast from "./use/toast";
 
 export default {
@@ -31,11 +34,11 @@ export default {
 
     const isAppInitialised = ref(false);
 
-    const { initWallet, isLoggedIn, fetchUserDetails } = useArcanaWallet();
+    const { initAuth, isLoggedIn, fetchUserDetails } = useArcanaAuth();
     const { initStorage } = useArcanaStorage();
 
     onBeforeMount(async () => {
-      await initWallet();
+      await initAuth();
       const hasLoggedIn = await isLoggedIn();
       if (hasLoggedIn) {
         await fetchUserDetails();
