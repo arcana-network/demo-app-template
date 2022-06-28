@@ -24,8 +24,10 @@ function useArcanaStorage() {
     const storage = StorageService.getInstance();
 
     try {
-      // STORAGE-3: Get the access object from storage instance
-      // Then get upload limit and download limit using this access object
+      // STORAGE-3: Fetch storage limits
+      // a) Get the access object from storage instance
+      const access = FIX_ME;
+      // b) Get upload limit and download limit using this access object
       // ...
       const [storageUsed, totalStorage] = [FIX_ME, FIX_ME];
       const [bandwidthUsed, totalBandwidth] = [FIX_ME, FIX_ME];
