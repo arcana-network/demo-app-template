@@ -67,7 +67,7 @@
           <tbody style="color: #707070">
             <tr
               v-for="file in files"
-              :key="file.fileId"
+              :key="file.did"
               style="border-bottom: 2px solid #a1cdf8"
             >
               <td class="pt-6 pb-3" style="width: calc(10vw + 3em)">
@@ -77,10 +77,10 @@
                       class="inline-block overflow-ellipsis overflow-hidden whitespace-nowrap pr-3 align-middle"
                       style="width: 14vw; max-width: max-content"
                     >
-                      {{ file.fileId }}
+                      {{ file.did }}
                     </span>
                   </template>
-                  {{ file.fileId }}
+                  {{ file.did }}
                 </n-tooltip>
                 <n-tooltip trigger="hover">
                   <template #trigger>
@@ -503,7 +503,7 @@ export default {
     }
 
     function fetchSharedUsers(file) {
-      getSharedUsers(file.fileId).then((res) => {
+      getSharedUsers(file.did).then((res) => {
         const users = res?.filter((user) => user !== GENESIS_ADDRESS);
         sharedUsers.value = {
           file,
