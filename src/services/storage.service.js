@@ -8,10 +8,6 @@ function createStorageService() {
     if (!storage) {
       // STORAGE-1: Create an instance of Arcana StorageProvider.
       // storage = ...
-      storage = new StorageProvider({
-        appId: "<your-app-id>",
-        provider: window.arcana.provider,
-      });
     }
   }
 
