@@ -179,7 +179,7 @@ function useArcanaStorage() {
       // b) Delete the file using access object
       // ...
 
-      storage.dispatch("removeMyFiles", file);
+      store.dispatch("removeMyFiles", file);
       fetchStorageLimits();
       toastSuccess("Delete success");
     } catch (error) {
