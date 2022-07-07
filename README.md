@@ -10,7 +10,7 @@ Refer to [Arcana Network documentation](https://docs.beta.arcana.network/docs/st
 
   - You'll need latest LTS versions of **`node.js`** and **`npm`** installed in your system for this code to work.
   - You'll need to register and configure your dApp using [Arcana's Developer Dashboard](https://dashboard.beta.arcana.network). Configure social authentication mechanism, storage region, storage limits and other settings using the dashboard.
-  - You'll need client ID or other social authentication identifiers for the selected user onboarding mechanisms: Google, Twitter, Twitch, Discord, Reddit, GitHub. You'll need to specify the client ID or other identifier created through social authentication provider in [Arcana's Developer Dashboard](https://dashboard.beta.arcana.network)
+You'll need to create Google OAuth and obtain a client ID using Google console. This client ID must be specified for social authentication in [Arcana's Developer Dashboard](https://dashboard.beta.arcana.network)
 
 - Steps:
 
