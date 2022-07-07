@@ -32,11 +32,11 @@ npm install
 npm run dev
 ```
 
-4. To build the project for production (to generate static files for hosting)
+4. To build the project for production (to generate static files for hosting) and to preview the generated build, use
 
 ```bash
-npm run build
-```
+npm run build   # build for production
+npm run serve  # preview built files
 
 ## Dependencies
 
