@@ -48,7 +48,7 @@ This project is built using [Vue 3](https://v3.vuejs.org/guide/introduction.html
 - Other packages used
 
 - [Vue Router](https://next.router.vuejs.org/)
-- [Vuex](https://next.vuex.vuejs.org/)
+- [Pinia](https://pinia.vuejs.org/)
 - [Tailwind CSS](https://tailwindcss.com/) and [PostCSS](https://postcss.org/)
 - [Heroicons](https://heroicons.com/)
 - [NaiveUI](https://www.naiveui.com/en-US/os-theme/components/tooltip) for tooltips
