@@ -1,6 +1,8 @@
-# Sample dApp Template
+# Sample App Template
 
-This is a simple Vue application template. Use it to build a full-fledged dApp integrated with Arcana Auth and Storage SDKs. Learn how to enable user onboarding and data privacy features in dApp.
+This is a simple Vue application template. Use it as your starter kit to build a full-fledged dApp integrated with Arcana Auth and Storage SDKs.
+
+You can use this template to build a [Sample Demo App](https://github.com/arcana-network/demo-app) like application and learn how to enable user onboarding and data privacy features in dApp.
 
 Refer to [Arcana Network documentation](https://docs.beta.arcana.network/docs/starter-app) for step by step instructions on how to use this template and integrate with Arcana Auth and Storage SDKs for enabling user onboarding and data privacy features.
 
@@ -37,12 +39,13 @@ npm run dev
 ```bash
 npm run build   # build for production
 npm run serve  # preview built files
+```
 
 ## Dependencies
 
-This project is built using [Vue 3](https://v3.vuejs.org/guide/introduction.html) and uses [Vite.js](https://vitejs.dev/guide/) for generating builds
+This project is built using [Vue 3](https://v3.vuejs.org/guide/introduction.html) and uses [Vite.js](https://vitejs.dev/guide/) for generating builds.
 
-Other than that, these project uses following dependencies
+- Other packages used
 
 - [Vue Router](https://next.router.vuejs.org/)
 - [Vuex](https://next.vuex.vuejs.org/)
