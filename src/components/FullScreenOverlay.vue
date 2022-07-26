@@ -10,9 +10,3 @@
   filter: blur(4px);
 }
 </style>
-
-<script>
-export default {
-  name: "FullScreenOverlay",
-};
-</script>

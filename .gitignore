@@ -7,3 +7,5 @@ dist-ssr
 .firebaserc
 firebase.json
 .env
+public/auth.min.js
+public/storage.umd.js

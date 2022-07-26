@@ -1,41 +1,44 @@
-# SDK Demo
+# Sample dApp Template
 
-This is a simple app for integrating and testing Arcana's login and storage SDKs.
-Use this app to implement and test SSO (Oauth) based login and file based transactions like upload, download, delete and share
+This is a simple Vue application template. Use it to build a full-fledged dApp integrated with Arcana Auth and Storage SDKs. Learn how to enable user onboarding and data privacy features in dApp.
+
+Refer to [Arcana Network documentation](https://docs.beta.arcana.network/docs/starter-app) for step by step instructions on how to use this template and integrate with Arcana Auth and Storage SDKs for enabling user onboarding and data privacy features.
 
 ## Quick Start
 
 - Prerequisites:
 
-  - You'll need an up to date LTS versions of **`node.js`** and **`npm`** installed in your system for this code to work.
-  - You'll need a smart contract address. Get one at https://developer.arcana.network by creating an app.
-  - You'll need client id of one of the following for login: Google, Twitch, Discord, Reddit, GitHub. You'll need to add this client id in the app that you created in [Arcana's Developer Dashboard](https://developer.arcana.network)
+  - You'll need latest LTS versions of **`node.js`** and **`npm`** installed in your system for this code to work.
+  - You'll need to register and configure your dApp using [Arcana's Developer Dashboard](https://dashboard.beta.arcana.network). Configure social authentication mechanism, storage region, storage limits and other settings using the dashboard.
+You'll need to create Google OAuth and obtain a client ID using Google console. This client ID must be specified for social authentication in [Arcana's Developer Dashboard](https://dashboard.beta.arcana.network)
 
-- Clone this repo
+- Steps:
+
+1. Clone this repo
 
 ```bash
-git clone <repo-url>
+git clone git@github.com:arcana-network/sdk-demo.git
 ```
 
-- Install dependencies
+2. Install dependencies
 
 ```bash
 npm install
 ```
 
-- To run the project in development environment
+3. To run the project in development environment
 
 ```bash
 npm run dev
 ```
 
-- To build the project for production (to generate static files for hosting)
+4. To build the project for production (to generate static files for hosting) and to preview the generated build, use
 
 ```bash
-npm run build
-```
+npm run build   # build for production
+npm run serve  # preview built files
 
-### Dependencies
+## Dependencies
 
 This project is built using [Vue 3](https://v3.vuejs.org/guide/introduction.html) and uses [Vite.js](https://vitejs.dev/guide/) for generating builds
 

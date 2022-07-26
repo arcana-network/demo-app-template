@@ -147,9 +147,7 @@
 
 <script>
 import FullScreenOverlay from "./FullScreenOverlay.vue";
-
 export default {
-  name: "FullScreenLoader",
   components: { FullScreenOverlay },
   props: ["message"],
   setup() {},

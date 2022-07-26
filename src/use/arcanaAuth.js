@@ -1,75 +1,77 @@
 import { useStore } from "vuex";
-import { Wallet } from "ethers";
+import { useRouter } from "vue-router";
 
-import padPublicKey from "../utils/padPublicKey";
+import AuthService from "../services/auth.service";
 
-const ARCANA_APP_ID = import.meta.env.VITE_ARCANA_APP_ID;
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-
-// AUTH-1: Create an instance of Arcana AuthProvider.
-const authInstance = {};
+const FIX_ME = null;
 
 function useArcanaAuth() {
   const store = useStore();
+  const router = useRouter();
 
-  function isLoggedIn() {
-    // AUTH-2: Check if the user is already logged in.
+  const auth = AuthService.getInstance();
+
+  async function initAuth() {
+    store.dispatch("showFullScreenLoader", "Initialising Arcana auth...");
+
+    // AUTH-2: Initialise and configure the auth service.
+    // a) Initialise the auth service
+    // b) Set a disconnect listener. On disconnect, clear store,
+    //    route to login and perform a refresh
+    // ...
+
+    store.dispatch("hideFullScreenLoader");
+  }
+
+  async function isLoggedIn() {
+    store.dispatch("showFullScreenLoader", "Checking login status...");
+
+    // AUTH-3: Check if a user is logged in
+    const loginStatus = FIX_ME;
+
+    store.dispatch("hideFullScreenLoader");
+    return loginStatus;
+  }
+
+  async function requestSocialLogin(type) {
+    // AUTH-4: Login user with selected social login type
     // ...
   }
 
-  async function login() {
-    // AUTH-3: Sign in a user.
-    if (!isLoggedIn()) {
-      store.dispatch("showLoader", "Logging in...");
-      // AUTH-3a: If user does not have an active session, trigger the Google authentication process.
-      // ...
-    }
+  async function fetchUserDetails() {
+    store.dispatch("showFullScreenLoader", "Fetching account details...");
 
-    store.dispatch(
-      "showLoader",
-      "Fetching keys and generating wallet address..."
-    );
+    // AUTH-5: Fetch user details
+    const userInfo = FIX_ME;
 
-    // AUTH-3b: Fetch the user's information and save it.
-    // const { userInfo, privateKey } = ...;
-    // store.dispatch("addBasicDetails", {
-    //   email: ...,
-    //   profileImage: ...,
-    //   givenName: ...
-    // });
+    store.dispatch("addUserInfo", JSON.parse(userInfo));
 
-    // AUTH-3c: Fetch the user's public key and create a wallet.
-    // const publicKey = ...;
-    // const actualPublicKey = padPublicKey(publicKey);
-    // const wallet = new Wallet(privateKey);
-    // store.dispatch("addCryptoDetails", {
-    //   walletAddress: ...,
-    //   privateKey: ...,
-    //   publicKey: ...,
-    // });
+    // AUTH-6: Fetch user's wallet address
+    const walletAddress = FIX_ME;
 
-    store.dispatch("hideLoader");
-  }
+    store.dispatch("addWalletInfo", { address: walletAddress });
 
-  function handleRedirect() {
-    // AUTH-4: Handle auth flow on the redirect page.
-    // ...
+    store.dispatch("hideFullScreenLoader");
   }
 
   async function logout() {
-    // AUTH-5: Log a user out.
+    // AUTH-7: Logout a user
     // ...
-    store.dispatch("clearStore");
+  }
+
+  async function requestPublicKey(email) {
+    // AUTH-8: Get public key associated with the email
+    // ...
   }
 
   return {
-    handleRedirect,
+    fetchUserDetails,
+    initAuth,
     isLoggedIn,
-    login,
     logout,
+    requestPublicKey,
+    requestSocialLogin,
   };
 }
-
-export { authInstance };
 
 export default useArcanaAuth;

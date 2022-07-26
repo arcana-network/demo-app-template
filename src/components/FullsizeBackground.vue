@@ -20,9 +20,3 @@
   }
 }
 </style>
-
-<script>
-export default {
-  name: "FullSizeBackground",
-};
-</script>

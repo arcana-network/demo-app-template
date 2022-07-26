@@ -50,10 +50,7 @@
 
 <script>
 import { onMounted, ref, watch } from "@vue/runtime-core";
-
 export default {
-  name: "DropdownMenu",
-  props: ["show", "position", "items"],
   setup(props, { emit }) {
     let topLeftRadius = ref(20);
     let topRightRadius = ref(20);
@@ -142,6 +139,7 @@ export default {
       executeCommand,
     };
   },
+  props: ["show", "position", "items"],
 };
 </script>
 
