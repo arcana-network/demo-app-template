@@ -71,7 +71,7 @@ Refer to the [Arcana Network documentation](https://docs.beta.arcana.network/doc
 
 ## 💡 Support
 
-For any support or integration related queries, contact [Arcana support team](mailto:support@arcana.network).
+For any support or integration-related queries, contact the [Arcana Support Team](mailto:support@arcana.network).
 
 ## 🤝 Contributing Guide
 
