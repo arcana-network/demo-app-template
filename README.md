@@ -73,7 +73,7 @@ Refer to the [Arcana Network documentation](https://docs.beta.arcana.network/doc
 
 For any support or integration related queries, contact [Arcana support team](mailto:support@arcana.network).
 
-## 🤝 Contributing
+## 🤝 Contributing Guide
 
 We welcome all contributions to this public repository from the community.
 
