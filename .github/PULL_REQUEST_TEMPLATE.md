@@ -1,11 +1,6 @@
 # Pull Request Template
 
-Resolves or continues [AR-XXX](...).
-
-## Blocking dependencies
-
-- [AR-YYY](...)
-- [AR-ZZZ](...)
+Resolves Arcana's Sample App Template Issue [Issue Number](Link).
 
 ## Changes
 
@@ -15,5 +10,4 @@ When making primarily visual changes, it's helpful to include before and after s
 
 ## Checklist
 
-- [ ] The branch name follows the format: `developer/AR-XXX-issue-name`.
 - [ ] The changes have been tested locally.
