@@ -67,7 +67,7 @@ This project is built using [Vue 3](https://v3.vuejs.org/guide/introduction.html
 
 You can use this template to build a [Sample Demo App](https://github.com/arcana-network/demo-app)-like application and learn how to enable user onboarding and data privacy features in dApp.
 
-Refer to the [Arcana Network documentation](https://docs.arcana.network/docs/starter-app) for step by step instructions on how to use this template and integrate with Arcana Auth and Storage SDKs for enabling user onboarding and data privacy features.
+Refer to the [Arcana Network documentation](https://docs.arcana.network/docs/starter-app) for step-by-step instructions on how to use this template and integrate it with Arcana Auth and Storage SDKs for enabling user onboarding and data privacy features.
 
 ## 💡 Support
 
