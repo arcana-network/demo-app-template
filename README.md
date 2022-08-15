@@ -17,8 +17,9 @@ This is a simple Vue application template. Use it as your starter kit to build a
 
 - You'll need latest LTS versions of **`node.js`** and **`npm`** installed in your system for this code to work.
 
-- You must register and configure your dApp using [Arcana's Developer Dashboard](https://dashboard.beta.arcana.network). Configure social authentication mechanism, storage region, storage limits and other settings using the dashboard.
-You'll need to create Google OAuth and obtain a client ID using Google console. This client ID must be specified for social authentication in [Arcana's Developer Dashboard](https://dashboard.beta.arcana.network)
+- You must register and configure your dApp using [Arcana's Developer Dashboard](https://dashboard.arcana.network). Configure the social authentication mechanism, storage region, storage limits and other settings using the dashboard.
+
+- You'll need to create Google OAuth and obtain a client ID using Google console. This client ID must be specified for social authentication in [Arcana's Developer Dashboard](https://dashboard.arcana.network)
 
 ### Setup Steps
 
@@ -34,7 +35,7 @@ git clone git@github.com:arcana-network/sdk-demo.git
 npm install
 ```
 
-3. To run the project in development environment
+3. To run the project in a development environment
 
 ```bash
 npm run dev
@@ -65,9 +66,9 @@ This project is built using [Vue 3](https://v3.vuejs.org/guide/introduction.html
 
 ## 📚 Usage
 
-You can use this template to build a [Sample Demo App](https://github.com/arcana-network/demo-app)-like application and learn how to enable user onboarding and data privacy features in dApp.
+You can use this template to build a full-fledged dApp similar to the [Sample Demo App](https://github.com/arcana-network/demo-app).
 
-Refer to the [Arcana Network documentation](https://docs.beta.arcana.network/docs/starter-app) for step by step instructions on how to use this template and integrate with Arcana Auth and Storage SDKs for enabling user onboarding and data privacy features.
+Refer to the [Arcana Network documentation](https://docs.arcana.network/docs/starter-app) for step-by-step instructions on how to get started with this template and integrate your dApp with the Arcana SDKs to build user onboarding and data privacy features in your dApp.
 
 ## 💡 Support
 
@@ -77,7 +78,7 @@ For any support or integration-related queries, contact the [Arcana Support Team
 
 We welcome all contributions to this public repository from the community.
 
-Read our [contributing guide](https://github.com/arcana-network/license/blob/main/CONTRIBUTING.md) to learn more about the our development process, how to propose bug fixes and improvements, and the code of conduct that we expect the participants to adhere to.
+Read our [contributing guide](https://github.com/arcana-network/license/blob/main/CONTRIBUTING.md) to learn more about our development process, how you can propose bug fixes and improvements and the code of conduct that we expect the participants to adhere to.
 
 ## ℹ️ License
 
