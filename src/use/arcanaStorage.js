@@ -1,8 +1,11 @@
+// STORAGE-IMPORT : Import Arcana storage access type enum
+// ...
+
 import bytes from "bytes";
+import { ethers } from "ethers";
 import { useStore } from "vuex";
 
 import StorageService from "../services/storage.service";
-import AuthService from "../services/auth.service";
 import useArcanaAuth from "../use/arcanaAuth";
 import useToast from "../use/toast";
 
@@ -15,7 +18,7 @@ function useArcanaStorage() {
   const { toastSuccess, toastError } = useToast();
   const { requestPublicKey } = useArcanaAuth();
 
-  function initStorage() {
+  async function initStorage() {
     // STORAGE-2: Initialize the storage instance
     // ...
   }
@@ -25,10 +28,6 @@ function useArcanaStorage() {
 
     try {
       // STORAGE-3: Fetch storage limits
-      // a) Get the access object from storage instance
-      const access = FIX_ME;
-      // b) Get upload limit and download limit using this access object
-      // ...
       const [storageUsed, totalStorage] = [FIX_ME, FIX_ME];
       const [bandwidthUsed, totalBandwidth] = [FIX_ME, FIX_ME];
 
@@ -91,11 +90,8 @@ function useArcanaStorage() {
       store.dispatch("showInlineLoader", "Uploading file");
 
       // STORAGE-6: Upload a file
-      // a) Get uploader object from storage instance
-      const uploader = FIX_ME;
-      // b) Handle progress, success and error events
-      // c) Upload a file and get the did
       const did = FIX_ME;
+      onSuccess(did);
 
       function onProgress(uploaded, total) {
         store.dispatch(
@@ -103,12 +99,6 @@ function useArcanaStorage() {
           `Uploaded ${bytes(uploaded)} / ${bytes(total)}`
         );
         totalSize = total;
-      }
-
-      function onError(error) {
-        console.error(error);
-        toastError(error.message);
-        store.dispatch("hideInlineLoader");
       }
 
       function onSuccess() {
@@ -139,10 +129,8 @@ function useArcanaStorage() {
       store.dispatch("showInlineLoader", "Downloading file");
 
       // STORAGE-7: Download a file
-      // a) Get downloader object from storage instance
-      const downloader = FIX_ME;
-      // b) Handle progress and success events
-      // c) Download a file
+      // ...
+      onSuccess()
 
       function onProgress(downloaded, total) {
         store.dispatch(
@@ -174,9 +162,6 @@ function useArcanaStorage() {
       store.dispatch("showInlineLoader", "Deleting file");
 
       // STORAGE-8: Delete a file
-      // a) Get access object from storage instance
-      const access = FIX_ME;
-      // b) Delete the file using access object
       // ...
 
       store.dispatch("removeMyFiles", file);
@@ -204,9 +189,7 @@ function useArcanaStorage() {
       const publicKey = FIX_ME;
       // b) Compute wallet address using public key
       const address = FIX_ME;
-      // c) Get access object from storage instance
-      const access = FIX_ME;
-      // d) Share a file to this address
+      // c) Share a file to this address
       // ...
 
       toastSuccess(`Shared file successfully with ${email}`);
@@ -226,9 +209,6 @@ function useArcanaStorage() {
       store.dispatch("showInlineLoader", "Fetch shared users");
 
       // STORAGE-10: Get list of users, the file is shared with
-      // a) Get access object from storage instance
-      const access = FIX_ME;
-      // b) Get shared users
       const sharedUsers = FIX_ME;
 
       return sharedUsers;
@@ -247,9 +227,6 @@ function useArcanaStorage() {
       store.dispatch("showInlineLoader", "Revoking file access");
 
       // STORAGE-11: Revoke access to a shared file
-      // a) Get access object from storage instance
-      const access = FIX_ME;
-      // b) Revoke share access
       // ...
 
       toastSuccess("File access revoked");
@@ -275,9 +252,7 @@ function useArcanaStorage() {
       const publicKey = FIX_ME;
       // b) Compute wallet address using public key
       const address = FIX_ME;
-      // c) Get access object from storage instance and
-      const access = FIX_ME;
-      // d) Transfer ownership of this file to that address
+      // c) Transfer ownership of this file to that address
       // ...
 
       store.dispatch("removeMyFiles", fileToTransfer);
