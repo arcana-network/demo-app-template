@@ -20,7 +20,6 @@ import { useStore } from "vuex";
 import AppSidebar from "./components/AppSidebar.vue";
 import FullScreenLoader from "./components/FullScreenLoader.vue";
 import FullsizeBackground from "./components/FullsizeBackground.vue";
-import useArcanaStorage from "./use/arcanaStorage";
 import useArcanaAuth from "./use/arcanaAuth";
 import useToast from "./use/toast";
 
@@ -35,20 +34,19 @@ export default {
     const isAppInitialised = ref(false);
 
     const { initAuth, isLoggedIn, fetchUserDetails } = useArcanaAuth();
-    const { initStorage } = useArcanaStorage();
 
     onBeforeMount(async () => {
       await initAuth();
       const hasLoggedIn = await isLoggedIn();
       if (hasLoggedIn) {
-        await fetchUserDetails();
+        setTimeout(async () => {
+          await fetchUserDetails();
 
-        initStorage();
-
-        if (route.path === "/login") {
-          await router.push("/my-files");
-          toastSuccess("Login Success");
-        }
+          if (route.path === "/login") {
+            await router.push("/my-files");
+            toastSuccess("Login Success");
+          }
+        }, 500)
       } else {
         await router.push("/login");
       }

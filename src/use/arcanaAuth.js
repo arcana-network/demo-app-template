@@ -44,10 +44,10 @@ function useArcanaAuth() {
     // AUTH-5: Fetch user details
     const userInfo = FIX_ME;
 
-    store.dispatch("addUserInfo", JSON.parse(userInfo));
+    store.dispatch("addUserInfo", userInfo);
 
     // AUTH-6: Fetch user's wallet address
-    const walletAddress = FIX_ME;
+    const [walletAddress] = [FIX_ME];
 
     store.dispatch("addWalletInfo", { address: walletAddress });
 
@@ -62,9 +62,15 @@ function useArcanaAuth() {
   async function requestPublicKey(email) {
     // AUTH-8: Get public key associated with the email
     // ...
+    const publicKey = FIX_ME;
+    if (!publicKey.startsWith("0x")) {
+      return `0x${publicKey}`;
+    }
+    return publicKey;
   }
 
   return {
+    auth,
     fetchUserDetails,
     initAuth,
     isLoggedIn,
