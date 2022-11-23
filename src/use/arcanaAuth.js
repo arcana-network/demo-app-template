@@ -33,8 +33,8 @@ function useArcanaAuth() {
     return loginStatus;
   }
 
-  async function requestSocialLogin(type) {
-    // AUTH-4: Login user with selected social login type
+  async function requestLogin() {
+    // AUTH-4: Login user using auth popup
     // ...
   }
 
@@ -76,7 +76,7 @@ function useArcanaAuth() {
     isLoggedIn,
     logout,
     requestPublicKey,
-    requestSocialLogin,
+    requestLogin,
   };
 }
 
