@@ -5,12 +5,12 @@
       style="height: 120px; display: inline"
     />
     <div class="inline-block mt-12">
-      By clicking on signin with google, you agree to Arcana Network's
+      By clicking on Login, you agree to Arcana Network's
       <a href="/" style="color: #058aff; text-decoration: none"> Privacy </a>
       &
       <a href="/" style="color: #058aff; text-decoration: none"> Terms </a>
     </div>
-    <a class="google-button" @click.stop="onSignInClick">Sign In with Google</a>
+    <a class="google-button" @click.stop="onSignInClick">Login</a>
   </div>
 </template>
 
@@ -58,8 +58,7 @@
 }
 
 .google-button {
-  display: inline-block;
-  padding: 0.8em 1.2em;
+  display: inline-flex;
   border: 1px solid rgb(5, 138, 255);
   background-color: rgb(5, 138, 255);
   color: white;
@@ -69,6 +68,10 @@
   white-space: nowrap;
   font-weight: 800;
   font-size: 1.2em;
+  width: 8rem;
+  height: 3rem;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 
@@ -83,7 +86,7 @@ export default {
   setup() {
     const router = useRouter();
     const { toastSuccess, toastError } = useToast();
-    const { requestSocialLogin, fetchUserDetails, auth  } = useArcanaAuth();
+    const { requestLogin, fetchUserDetails, auth } = useArcanaAuth();
 
     onMounted(async () => {
       document.title = "Login | Arcana Demo";
@@ -94,7 +97,7 @@ export default {
 
     async function onSignInClick() {
       try {
-        await requestSocialLogin("google");
+        await requestLogin();
         await fetchUserDetails();
         await router.push("/my-files");
         toastSuccess("Login Success");
